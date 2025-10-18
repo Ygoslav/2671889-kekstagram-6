@@ -27,3 +27,6 @@ const getNumbersFromString = (string) => {
   }
   return result;
 };
+
+
+export {checkStringLength, checkPalindrome, getNumbersFromString};
