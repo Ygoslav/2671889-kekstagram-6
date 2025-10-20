@@ -29,4 +29,22 @@ const getNumbersFromString = (string) => {
 };
 
 
+const timeToMinutes = (timeStr) =>{
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  return hours * 60 + minutes;
+};
+
+
+const isMeetingInWorkTime = (startWorkTime, endWorkTime, startMeetingTime, durationMeetingMinutes)=>
+  timeToMinutes(startMeetingTime) >= timeToMinutes(startWorkTime) &&
+  timeToMinutes(startMeetingTime) + durationMeetingMinutes <= timeToMinutes(endWorkTime);
+
+
+isMeetingInWorkTime('08:00', '17:30', '14:00', 90); // true
+isMeetingInWorkTime('8:0', '10:0', '8:0', 120);     // true
+isMeetingInWorkTime('08:00', '14:30', '14:00', 90); // false
+isMeetingInWorkTime('14:00', '17:30', '08:0', 90);  // false
+isMeetingInWorkTime('8:00', '17:30', '08:00', 900); // false
+
+
 export {checkStringLength, checkPalindrome, getNumbersFromString};
