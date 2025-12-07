@@ -1,20 +1,32 @@
-const pictureTemplate = document.querySelector('#picture');
+import { openBigPicture } from './big-picture.js';
+
+const pictureTemplate = document
+  .querySelector('#picture')
+  .content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
 
-const createPictureElement = (photoObject) => {
-  const { url, description, comments, likes } = photoObject;
-  const pictureElement = pictureTemplate.content.cloneNode(true);
+const addClickOnPhotoListener = (pictureElement, photoObject) => {
+  pictureElement.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    openBigPicture(photoObject);
+  });
+};
 
+const fillPictureElementData = (pictureElement, photoObject) => {
+  const { url, description, comments, likes } = photoObject;
   const img = pictureElement.querySelector('.picture__img');
+  const commentsSpan = pictureElement.querySelector('.picture__comments');
+  const likesSpan = pictureElement.querySelector('.picture__likes');
   img.src = url;
   img.alt = description;
-
-  const commentsSpan = pictureElement.querySelector('.picture__comments');
   commentsSpan.textContent = comments.length;
-
-  const likesSpan = pictureElement.querySelector('.picture__likes');
   likesSpan.textContent = likes;
+};
 
+const createPictureElement = (photoObject) => {
+  const pictureElement = pictureTemplate.cloneNode(true);
+  fillPictureElementData(pictureElement, photoObject);
+  addClickOnPhotoListener(pictureElement, photoObject);
   return pictureElement;
 };
 
