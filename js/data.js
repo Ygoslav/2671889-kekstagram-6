@@ -90,4 +90,4 @@ const addPhotos = () => {
 };
 
 
-export {addPhotos};
+export {addPhotos, photos};
