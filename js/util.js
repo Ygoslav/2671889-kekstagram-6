@@ -12,4 +12,12 @@ const toggleClass = (element, className) => {
   }
 };
 
-export { getRandomInt, getRandomArrayElement, isEscapeKeyPressed, toggleClass };
+const checkStringLength = (string, length) => string.length <= length;
+
+export {
+  getRandomInt,
+  getRandomArrayElement,
+  isEscapeKeyPressed,
+  toggleClass,
+  checkStringLength,
+};
