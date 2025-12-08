@@ -68,6 +68,7 @@ const closeBigPicture = () => {
 
 function onPressEscape(evt) {
   if (isEscapeKeyPressed(evt)) {
+    evt.preventDefault();
     closeBigPicture();
   }
 }
