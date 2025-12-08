@@ -83,15 +83,6 @@ pristine.addValidator(
 pristine.addValidator(
   hashtagsInput,
   (hashtagsString) =>
-    getNormalizedHashtagsList(hashtagsString).every((hashtag) =>
-      checkStringLength(hashtag, HASHTAG_MAX_LENGTH),
-    ),
-  `Длина хэш-тэга не должна превышать ${HASHTAG_MAX_LENGTH} символов`,
-);
-
-pristine.addValidator(
-  hashtagsInput,
-  (hashtagsString) =>
     getNormalizedHashtagsList(hashtagsString).every(
       (hashtag) =>
         checkStringLength(hashtag, 1) ||
