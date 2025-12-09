@@ -12,7 +12,6 @@ const toggleModal = () => {
 
 const openForm = () => {
   toggleModal();
-  document.body.classList.add('modal-open');
   document.addEventListener('keydown', onPressEscape);
   uploadFormCancel.addEventListener('click', onClickUploadFormCancel);
 };
