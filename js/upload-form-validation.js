@@ -8,11 +8,8 @@ const COMMENT_MAX_LENGTH = 140;
 const hashtagValidPattern = /^[a-zа-яё0-9]+$/;
 
 const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
-const commentInputElement =
-  uploadFormElement.querySelector('.text__description');
-const submitButtonElement = uploadFormElement.querySelector(
-  '.img-upload__submit',
-);
+const commentInputElement = uploadFormElement.querySelector('.text__description');
+const submitButtonElement = uploadFormElement.querySelector('.img-upload__submit');
 
 const pristine = new Pristine(uploadFormElement, {
   classTo: 'img-upload__field-wrapper',
@@ -33,8 +30,7 @@ const getNormalizedHashtagsList = (hashtagsString) =>
     .split(/\s+/)
     .map((tag) => tag.toLowerCase());
 
-const validateHashtagsCount = (hashtags) =>
-  hashtags.length <= HASHTAG_COUNT_LIMIT;
+const validateHashtagsCount = (hashtags) => hashtags.length <= HASHTAG_COUNT_LIMIT;
 
 const validateHashtagsUnique = (normalizedHashtags) => {
   const uniqueHashtags = new Set(normalizedHashtags);
@@ -51,15 +47,11 @@ const Rules = [
     error: 'Хэш-теги должны начинаться с символа #',
   },
   {
-    check: (hashtags) =>
-      hashtags.some(
-        (hashtag) => !checkStringLength(hashtag, HASHTAG_MAX_LENGTH),
-      ),
+    check: (hashtags) => hashtags.some((hashtag) => !checkStringLength(hashtag, HASHTAG_MAX_LENGTH)),
     error: `Длина хэш-тэга не должна превышать ${HASHTAG_MAX_LENGTH} символов`,
   },
   {
-    check: (hashtags) =>
-      hashtags.some((hashtag) => !hashtagValidPattern.test(hashtag.slice(1))),
+    check: (hashtags) => hashtags.some((hashtag) => !hashtagValidPattern.test(hashtag.slice(1))),
     error: 'Хэш-тэг может содержать только буквы и цифры',
   },
   {
