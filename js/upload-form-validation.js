@@ -5,19 +5,24 @@ const HASHTAG_MAX_LENGTH = 20;
 const HASHTAG_COUNT_LIMIT = 5;
 const COMMENT_MAX_LENGTH = 140;
 
-const hashtagValidPattern = /^[a-zA-Zа-яА-ЯёЁ0-9]+$/;
+const hashtagValidPattern = /^[a-zа-яё0-9]+$/;
 
 const hashtagsInput = uploadFormElement.querySelector('.text__hashtags');
 const commentInput = uploadFormElement.querySelector('.text__description');
+const submitButton = uploadFormElement.querySelector('.img-upload__submit');
 
 const pristine = new Pristine(uploadFormElement, {
-  classTo: 'img-upload__text',
-  errorClass: 'form__item--invalid',
-  successClass: 'form__item--valid',
-  errorTextParent: 'img-upload__text',
-  errorTextTag: 'span',
-  errorTextClass: 'form__error',
+  classTo: 'img-upload__field-wrapper',
+  errorClass: 'img-upload__item--invalid',
+  successClass: 'img-upload__item--valid',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'div',
+  errorTextClass: 'img-upload__error',
 });
+
+let errorMessage = '';
+
+const getErrorMessage = () => errorMessage;
 
 const getNormalizedHashtagsList = (hashtagsString) =>
   hashtagsString
@@ -29,74 +34,76 @@ const validateHashtagsCount = (hashtags) =>
   hashtags.length <= HASHTAG_COUNT_LIMIT;
 
 const validateHashtagsUnique = (normalizedHashtags) => {
-  const originalHashtags = normalizedHashtags.filter(
-    (hashtag) => hashtag.length > 1,
-  );
-  const uniqueHashtags = new Set(originalHashtags);
-  return uniqueHashtags.size === originalHashtags.length;
+  const uniqueHashtags = new Set(normalizedHashtags);
+  return uniqueHashtags.size === normalizedHashtags.length;
 };
 
-const validateComments = (value) =>
-  value.trim() === '' || checkStringLength(value, COMMENT_MAX_LENGTH);
+const Rules = [
+  {
+    check: (hashtags) => hashtags.some((hashtag) => hashtag === '#'),
+    error: 'Хэш-тег не может состоять только из одной решётки',
+  },
+  {
+    check: (hashtags) => hashtags.some((hashtag) => !hashtag.startsWith('#')),
+    error: 'Хэш-теги должны начинаться с символа #',
+  },
+  {
+    check: (hashtags) =>
+      hashtags.some(
+        (hashtag) => !checkStringLength(hashtag, HASHTAG_MAX_LENGTH),
+      ),
+    error: `Длина хэш-тэга не должна превышать ${HASHTAG_MAX_LENGTH} символов`,
+  },
+  {
+    check: (hashtags) =>
+      hashtags.some((hashtag) => !hashtagValidPattern.test(hashtag.slice(1))),
+    error: 'Хэш-тэг может содержать только буквы и цифры',
+  },
+  {
+    check: (hashtags) => !validateHashtagsUnique(hashtags),
+    error: 'Хэш-тэги должны быть уникальными',
+  },
+];
 
-pristine.addValidator(
-  hashtagsInput,
-  (hashtagsString) =>
-    validateHashtagsCount(getNormalizedHashtagsList(hashtagsString)),
-  `Нельзя использовать более ${HASHTAG_COUNT_LIMIT} хэш-тэгов`,
-);
+const validateHashtags = (hashtagsString) => {
+  errorMessage = '';
+  if (!hashtagsString) {
+    return true;
+  }
+  const normalizedHashtags = getNormalizedHashtagsList(hashtagsString);
+  if (!validateHashtagsCount(normalizedHashtags)) {
+    errorMessage = `Нельзя использовать более ${HASHTAG_COUNT_LIMIT} хэш-тэгов`;
+    return false;
+  }
 
-pristine.addValidator(
-  hashtagsInput,
-  (hashtagsString) =>
-    validateHashtagsUnique(getNormalizedHashtagsList(hashtagsString)),
-  'Хэш-тэги должны быть уникальными',
-);
+  return !Rules.some((rule) => {
+    const isInvalid = rule.check(normalizedHashtags);
+    if (isInvalid) {
+      errorMessage = rule.error;
+    }
+    return isInvalid;
+  });
+};
 
-pristine.addValidator(
-  hashtagsInput,
-  (hashtagsString) =>
-    getNormalizedHashtagsList(hashtagsString).every(
-      (hashtag) => hashtag !== '#',
-    ),
-  'Хэш-тег не может состоять только из одной решётки',
-);
+const validateComments = (commentString) => {
+  errorMessage = '';
+  const isValid = checkStringLength(commentString.trim(), COMMENT_MAX_LENGTH);
+  if (!isValid) {
+    errorMessage = `Максимальная длина комментария - ${COMMENT_MAX_LENGTH} символов`;
+  }
+  return isValid;
+};
 
-pristine.addValidator(
-  hashtagsInput,
-  (hashtagsString) =>
-    getNormalizedHashtagsList(hashtagsString).every(
-      (hashtag) => hashtag.startsWith('#') || checkStringLength(hashtag, 0),
-    ),
-  'Хэш-теги должны начинаться с символа #',
-);
+pristine.addValidator(hashtagsInput, validateHashtags, getErrorMessage);
 
-pristine.addValidator(
-  hashtagsInput,
-  (hashtagsString) =>
-    getNormalizedHashtagsList(hashtagsString).every((hashtag) =>
-      checkStringLength(hashtag, HASHTAG_MAX_LENGTH),
-    ),
-  `Длина хэш-тэга не должна превышать ${HASHTAG_MAX_LENGTH} символов`,
-);
+pristine.addValidator(commentInput, validateComments, getErrorMessage);
 
-pristine.addValidator(
-  hashtagsInput,
-  (hashtagsString) =>
-    getNormalizedHashtagsList(hashtagsString).every(
-      (hashtag) =>
-        checkStringLength(hashtag, 1) ||
-        !hashtag.startsWith('#') ||
-        hashtagValidPattern.test(hashtag.slice(1)),
-    ),
-  'Хэш-тэг может содержать только буквы и цифры',
-);
+const onInput = () => {
+  submitButton.disabled = !pristine.validate();
+};
 
-pristine.addValidator(
-  commentInput,
-  validateComments,
-  `Максимальная длина комментария - ${COMMENT_MAX_LENGTH} символов`,
-);
+hashtagsInput.addEventListener('input', onInput);
+commentInput.addEventListener('input', onInput);
 
 hashtagsInput.addEventListener('keydown', (evt) => {
   if (isEscapeKeyPressed(evt)) {
@@ -107,11 +114,5 @@ hashtagsInput.addEventListener('keydown', (evt) => {
 commentInput.addEventListener('keydown', (evt) => {
   if (isEscapeKeyPressed(evt)) {
     evt.stopPropagation();
-  }
-});
-
-uploadFormElement.addEventListener('submit', (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
   }
 });
