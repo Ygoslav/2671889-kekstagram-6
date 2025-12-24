@@ -1,9 +1,9 @@
 import { openBigPicture } from './big-picture.js';
 
-const pictureTemplate = document
+const pictureTemplateElement = document
   .querySelector('#picture')
   .content.querySelector('.picture');
-const picturesContainer = document.querySelector('.pictures');
+const picturesContainerElement = document.querySelector('.pictures');
 
 const addClickOnPhotoListener = (pictureElement, photoObject) => {
   pictureElement.addEventListener('click', (evt) => {
@@ -14,17 +14,17 @@ const addClickOnPhotoListener = (pictureElement, photoObject) => {
 
 const fillPictureElementData = (pictureElement, photoObject) => {
   const { url, description, comments, likes } = photoObject;
-  const img = pictureElement.querySelector('.picture__img');
-  const commentsSpan = pictureElement.querySelector('.picture__comments');
-  const likesSpan = pictureElement.querySelector('.picture__likes');
-  img.src = url;
-  img.alt = description;
-  commentsSpan.textContent = comments.length;
-  likesSpan.textContent = likes;
+  const imgElement = pictureElement.querySelector('.picture__img');
+  const commentsSpanElement = pictureElement.querySelector('.picture__comments');
+  const likesSpanElement = pictureElement.querySelector('.picture__likes');
+  imgElement.src = url;
+  imgElement.alt = description;
+  commentsSpanElement.textContent = comments.length;
+  likesSpanElement.textContent = likes;
 };
 
 const createPictureElement = (photoObject) => {
-  const pictureElement = pictureTemplate.cloneNode(true);
+  const pictureElement = pictureTemplateElement.cloneNode(true);
   fillPictureElementData(pictureElement, photoObject);
   addClickOnPhotoListener(pictureElement, photoObject);
   return pictureElement;
@@ -35,7 +35,7 @@ const renderPhotos = (photoObjects) => {
   for (const photoObject of photoObjects) {
     fragment.appendChild(createPictureElement(photoObject));
   }
-  picturesContainer.appendChild(fragment);
+  picturesContainerElement.appendChild(fragment);
 };
 
 export { renderPhotos };

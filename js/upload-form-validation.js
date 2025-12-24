@@ -7,9 +7,12 @@ const COMMENT_MAX_LENGTH = 140;
 
 const hashtagValidPattern = /^[a-zа-яё0-9]+$/;
 
-const hashtagsInput = uploadFormElement.querySelector('.text__hashtags');
-const commentInput = uploadFormElement.querySelector('.text__description');
-const submitButton = uploadFormElement.querySelector('.img-upload__submit');
+const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
+const commentInputElement =
+  uploadFormElement.querySelector('.text__description');
+const submitButtonElement = uploadFormElement.querySelector(
+  '.img-upload__submit',
+);
 
 const pristine = new Pristine(uploadFormElement, {
   classTo: 'img-upload__field-wrapper',
@@ -94,24 +97,24 @@ const validateComments = (commentString) => {
   return isValid;
 };
 
-pristine.addValidator(hashtagsInput, validateHashtags, getErrorMessage);
+pristine.addValidator(hashtagsInputElement, validateHashtags, getErrorMessage);
 
-pristine.addValidator(commentInput, validateComments, getErrorMessage);
+pristine.addValidator(commentInputElement, validateComments, getErrorMessage);
 
 const onInput = () => {
-  submitButton.disabled = !pristine.validate();
+  submitButtonElement.disabled = !pristine.validate();
 };
 
-hashtagsInput.addEventListener('input', onInput);
-commentInput.addEventListener('input', onInput);
+hashtagsInputElement.addEventListener('input', onInput);
+commentInputElement.addEventListener('input', onInput);
 
-hashtagsInput.addEventListener('keydown', (evt) => {
+hashtagsInputElement.addEventListener('keydown', (evt) => {
   if (isEscapeKeyPressed(evt)) {
     evt.stopPropagation();
   }
 });
 
-commentInput.addEventListener('keydown', (evt) => {
+commentInputElement.addEventListener('keydown', (evt) => {
   if (isEscapeKeyPressed(evt)) {
     evt.stopPropagation();
   }
