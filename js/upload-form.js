@@ -1,4 +1,6 @@
 import { isEscapeKeyPressed, toggleClass } from './util.js';
+import { resetEffectSlider } from './image-preview-effects.js';
+import { resetScale } from './image-preview-scale.js';
 
 const uploadFormElement = document.querySelector('.img-upload__form');
 const uploadInputElement = uploadFormElement.querySelector('#upload-file');
@@ -21,6 +23,8 @@ const closeForm = () => {
   uploadFormElement.reset();
   document.removeEventListener('keydown', onPressEscape);
   uploadFormCancelElement.removeEventListener('click', onClickUploadFormCancel);
+  resetScale();
+  resetEffectSlider();
 };
 
 const onFileInputChange = () => {
