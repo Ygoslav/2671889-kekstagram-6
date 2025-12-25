@@ -4,9 +4,11 @@ import './big-picture.js';
 import './upload-form-validation.js';
 import './image-preview-scale.js';
 import './image-preview-effects.js';
-import {loadData} from './fetch-data.js';
+import { loadData } from './fetch-data.js';
+import { showAlertBox } from './alert-box.js';
 
-loadData().then(
-  (photos) => renderPhotos(photos)
-);
+loadData()
+  .then((photoObjects) => renderPhotos(photoObjects))
+  .catch(showAlertBox);
+
 initializeForm();
