@@ -2,21 +2,21 @@ import { isEscapeKeyPressed, toggleClass } from './util.js';
 
 const COMMENTS_STEP = 5;
 
-const bigPicture = document.querySelector('.big-picture');
-const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
-const likesCount = bigPicture.querySelector('.likes-count');
-const commentsCount = bigPicture.querySelector('.comments-count');
-const socialComments = bigPicture.querySelector('.social__comments');
-const socialCaption = bigPicture.querySelector('.social__caption');
-const socialCommentCount = bigPicture.querySelector('.social__comment-count');
-const commentsLoader = bigPicture.querySelector('.comments-loader');
-const bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
+const bigPictureElement = document.querySelector('.big-picture');
+const bigPictureImgElement = bigPictureElement.querySelector('.big-picture__img img');
+const likesCountElement = bigPictureElement.querySelector('.likes-count');
+const commentsCountElement = bigPictureElement.querySelector('.comments-count');
+const socialCommentsElement = bigPictureElement.querySelector('.social__comments');
+const socialCaptionElement = bigPictureElement.querySelector('.social__caption');
+const socialCommentCountElement = bigPictureElement.querySelector('.social__comment-count');
+const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
+const bigPictureCancelElement = bigPictureElement.querySelector('.big-picture__cancel');
 
 let currentCommentsShownCount = COMMENTS_STEP;
 let currentShownPhoto = null;
 
 const toggleModal = () => {
-  toggleClass(bigPicture, 'hidden');
+  toggleClass(bigPictureElement, 'hidden');
   toggleClass(document.body, 'modal-open');
 };
 
@@ -37,13 +37,13 @@ const createCommentElement = (commentObject) => {
 };
 
 const renderComments = (commentObjects) => {
-  socialComments.innerHTML = '';
+  socialCommentsElement.innerHTML = '';
 
   if (currentCommentsShownCount > commentObjects.length) {
     currentCommentsShownCount = commentObjects.length;
   }
 
-  socialCommentCount.innerHTML = `
+  socialCommentCountElement.innerHTML = `
     ${currentCommentsShownCount} из
     <span class="comments-count">
       ${commentObjects.length}
@@ -54,23 +54,23 @@ const renderComments = (commentObjects) => {
   for (let i = 0; i < currentCommentsShownCount; i++) {
     fragment.appendChild(createCommentElement(commentObjects[i]));
   }
-  socialComments.appendChild(fragment);
+  socialCommentsElement.appendChild(fragment);
 
   if (
     commentObjects.length <= COMMENTS_STEP ||
     currentCommentsShownCount >= commentObjects.length
   ) {
-    commentsLoader.classList.add('hidden');
+    commentsLoaderElement.classList.add('hidden');
   }
 };
 
 const fillBigPictureData = (photoObject) => {
   const { url, description, likes, comments } = photoObject;
-  bigPictureImg.src = url;
-  bigPictureImg.alt = description;
-  likesCount.textContent = likes;
-  commentsCount.textContent = comments.length;
-  socialCaption.textContent = description;
+  bigPictureImgElement.src = url;
+  bigPictureImgElement.alt = description;
+  likesCountElement.textContent = likes;
+  commentsCountElement.textContent = comments.length;
+  socialCaptionElement.textContent = description;
 };
 
 const openBigPicture = (photoObject) => {
@@ -83,11 +83,11 @@ const openBigPicture = (photoObject) => {
 };
 
 const closeBigPicture = () => {
-  socialComments.innerHTML = '';
-  socialCommentCount.innerHTML = '';
+  socialCommentsElement.innerHTML = '';
+  socialCommentCountElement.innerHTML = '';
   currentCommentsShownCount = COMMENTS_STEP;
   toggleModal();
-  commentsLoader.classList.remove('hidden');
+  commentsLoaderElement.classList.remove('hidden');
   document.removeEventListener('keydown', onPressEscape);
 };
 
@@ -109,7 +109,7 @@ function onPressEscape(evt) {
   }
 }
 
-commentsLoader.addEventListener('click', onClickCommentsLoader);
-bigPictureCancel.addEventListener('click', onClickBigPictureCancel);
+commentsLoaderElement.addEventListener('click', onClickCommentsLoader);
+bigPictureCancelElement.addEventListener('click', onClickBigPictureCancel);
 
 export { openBigPicture };
