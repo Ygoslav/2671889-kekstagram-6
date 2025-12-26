@@ -1,5 +1,4 @@
 import { checkStringLength, isEscapeKeyPressed } from './util.js';
-import { uploadFormElement } from './upload-form.js';
 
 const HASHTAG_MAX_LENGTH = 20;
 const HASHTAG_COUNT_LIMIT = 5;
@@ -7,6 +6,7 @@ const COMMENT_MAX_LENGTH = 140;
 
 const hashtagValidPattern = /^[a-zа-яё0-9]+$/;
 
+const uploadFormElement = document.querySelector('.img-upload__form');
 const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const commentInputElement = uploadFormElement.querySelector('.text__description');
 const submitButtonElement = uploadFormElement.querySelector('.img-upload__submit');
@@ -23,6 +23,10 @@ const pristine = new Pristine(uploadFormElement, {
 let errorMessage = '';
 
 const getErrorMessage = () => errorMessage;
+
+const clearErrorMessage = () => {
+  errorMessage = '';
+};
 
 const getNormalizedHashtagsList = (hashtagsString) =>
   hashtagsString
@@ -61,7 +65,7 @@ const Rules = [
 ];
 
 const validateHashtags = (hashtagsString) => {
-  errorMessage = '';
+  clearErrorMessage();
   if (!hashtagsString) {
     return true;
   }
@@ -81,7 +85,7 @@ const validateHashtags = (hashtagsString) => {
 };
 
 const validateComments = (commentString) => {
-  errorMessage = '';
+  clearErrorMessage();
   const isValid = checkStringLength(commentString.trim(), COMMENT_MAX_LENGTH);
   if (!isValid) {
     errorMessage = `Максимальная длина комментария - ${COMMENT_MAX_LENGTH} символов`;
@@ -111,3 +115,7 @@ commentInputElement.addEventListener('keydown', (evt) => {
     evt.stopPropagation();
   }
 });
+
+const resetPristine = () => pristine.reset();
+
+export { resetPristine };
