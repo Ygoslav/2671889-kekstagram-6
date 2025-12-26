@@ -5,11 +5,15 @@ import { resetPristine } from './upload-form-validation.js';
 import { uploadData } from './fetch-data.js';
 import { showSuccessMessage, showErrorMessage } from './upload-form-messages.js';
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 const uploadFormElement = document.querySelector('.img-upload__form');
 const uploadInputElement = uploadFormElement.querySelector('#upload-file');
 const uploadOverlayElement = uploadFormElement.querySelector('.img-upload__overlay');
 const uploadFormCancelElement = uploadOverlayElement.querySelector('#upload-cancel');
 const submitButtonElement = uploadFormElement.querySelector('.img-upload__submit');
+const imagePreviewElement = uploadFormElement.querySelector('.img-upload__preview img');
+const effectsPreviewElements = uploadFormElement.querySelectorAll('.effects__preview');
 
 const toggleModal = () => {
   toggleClass(uploadOverlayElement, 'hidden');
@@ -33,8 +37,18 @@ const closeForm = () => {
   submitButtonElement.disabled = false;
 };
 
+const isValidFileType = (file) => {
+  const fileName = file.name.toLowerCase();
+  return FILE_TYPES.some((fileExtension) => fileName.endsWith(fileExtension));
+};
+
 const onFileInputChange = () => {
-  if (uploadInputElement.files && uploadInputElement.files.length > 0) {
+  const file = uploadInputElement.files[0];
+  if (file && isValidFileType(file)) {
+    imagePreviewElement.src = URL.createObjectURL(file);
+    effectsPreviewElements.forEach((previewElement) => {
+      previewElement.style.backgroundImage = `url('${imagePreviewElement.src}')`;
+    });
     openForm();
   }
 };
