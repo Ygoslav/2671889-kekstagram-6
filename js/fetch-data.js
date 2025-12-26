@@ -8,4 +8,15 @@ const loadData = () =>
     return response.json();
   });
 
-export { loadData };
+const uploadData = (data) =>
+  fetch(SERVER_URL, {
+    method: 'POST',
+    body: data,
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error('Не удалось отправить данные на сервер');
+    }
+    return response.json();
+  });
+
+export { loadData, uploadData };
