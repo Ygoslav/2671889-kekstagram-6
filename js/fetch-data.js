@@ -9,7 +9,7 @@ const loadData = () =>
   });
 
 const uploadData = (data) =>
-  fetch(SERVER_URL, {
+  fetch(`${SERVER_URL}/`, {
     method: 'POST',
     body: data,
   }).then((response) => {

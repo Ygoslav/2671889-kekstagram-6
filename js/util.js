@@ -1,10 +1,17 @@
 const getRandomInt = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
-const getRandomArrayElement = (array) =>
-  array[getRandomInt(0, array.length - 1)];
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = getRandomInt(0, i);
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
 
 const isEscapeKeyPressed = (evt) => evt.key === 'Escape';
+
+const isButton = (evt) => evt.target.tagName === 'BUTTON';
 
 const toggleClass = (element, className) => {
   if (element) {
@@ -14,7 +21,7 @@ const toggleClass = (element, className) => {
 
 const checkStringLength = (string, length) => string.length <= length;
 
-const debounce = (callback, timeoutDelay = 500) => {
+const debounce = (callback, timeoutDelay) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
@@ -23,9 +30,9 @@ const debounce = (callback, timeoutDelay = 500) => {
 };
 
 export {
-  getRandomInt,
-  getRandomArrayElement,
+  shuffleArray,
   isEscapeKeyPressed,
+  isButton,
   toggleClass,
   checkStringLength,
   debounce,
