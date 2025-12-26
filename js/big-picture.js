@@ -43,12 +43,7 @@ const renderComments = (commentObjects) => {
     currentCommentsShownCount = commentObjects.length;
   }
 
-  socialCommentCountElement.innerHTML = `
-    ${currentCommentsShownCount} из
-    <span class="comments-count">
-      ${commentObjects.length}
-    </span> комментариев
-  `;
+  socialCommentCountElement.innerHTML = `${currentCommentsShownCount} из <span class="comments-count">${commentObjects.length}</span> комментариев`;
 
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < currentCommentsShownCount; i++) {

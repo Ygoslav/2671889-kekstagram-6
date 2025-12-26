@@ -1,8 +1,6 @@
 import { openBigPicture } from './big-picture.js';
 
-const pictureTemplateElement = document
-  .querySelector('#picture')
-  .content.querySelector('.picture');
+const pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainerElement = document.querySelector('.pictures');
 
 const addClickOnPhotoListener = (pictureElement, photoObject) => {
@@ -38,4 +36,11 @@ const renderPhotos = (photoObjects) => {
   picturesContainerElement.appendChild(fragment);
 };
 
-export { renderPhotos };
+const removePhotos = () => {
+  const pictureElements = picturesContainerElement.querySelectorAll('.picture');
+  if (pictureElements) {
+    pictureElements.forEach((pictureElement) => pictureElement.remove());
+  }
+};
+
+export { renderPhotos, removePhotos };
