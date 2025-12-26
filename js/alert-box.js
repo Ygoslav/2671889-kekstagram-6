@@ -4,6 +4,7 @@ const bodyElement = document.body;
 
 const showAlertBox = (error) => {
   const alertBoxElement = document.createElement('div');
+  alertBoxElement.classList.add('data-error');
   const { style } = alertBoxElement;
   style.zIndex = '100';
   style.position = 'static';
